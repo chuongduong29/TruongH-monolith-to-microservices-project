@@ -17,3 +17,22 @@ before_install:
 
 install:
   - docker-compose -f ./docker-compose-build.yaml build --parallel
+
+before_script:
+  - echo "no tests"
+
+script:
+  - docker --version # print the version for logging
+
+# Tagging
+  - docker tag reverseproxy chuongduong29/reverseproxy
+  - docker tag udagram-api-user chuongduong29/udagram-api-user
+  - docker tag udagram-api-feed chuongduong29/udagram-api-feed
+  - docker tag udagram-frontend chuongduong29/udagram-frontend
+
+after_success:
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push chuongduong29/reverseproxy
+  - docker push chuongduong29/udagram-api-user
+  - docker push chuongduong29/udagram-api-feed
+  - docker push chuongduong29/udagram-frontend
